@@ -1,39 +1,44 @@
 #coding=utf-8
 __author__ = 'xiyuanbupt'
+import ConfigParser
+
+cf = ConfigParser.ConfigParser()
+
+cf.read("global.ini")
 
 class ConfUtil:
 
     @classmethod
     def getDBName(cls):
-        return 'test_spider'
+        return cf.get('db','name')
 
     @classmethod
     def getXMLYAlbumCollectionName(cls):
-        return 'xmly_album'
+        return cf.get('collections','xmly_album')
 
     @classmethod
     def getXMLYCategoryCollectionName(cls):
-        return 'xmly_category'
+        return cf.get('collections','xmly_category')
 
     @classmethod
     def getKLAlbumCollectionName(cls):
-        return 'kl_album'
+        return cf.get('collections','kl_album')
 
     @classmethod
     def getKLCategoryCollectionName(cls):
-        return 'kl_category'
+        return cf.get('collections','kl_category')
 
     @classmethod
     def getQTAlbumCollectionName(cls):
-        return 'qt_item'
+        return cf.get('collections','qt_item')
 
     @classmethod
     def getMongoIP(cls):
-        return '114.112.103.33'
+        return cf.get('mongo','ip')
 
     @classmethod
     def getMongoPort(cls):
-        return 27017
+        return cf.getint('mongo','port')
 
     @classmethod
     def getCrontabDbCollectionName(cls):
@@ -41,7 +46,7 @@ class ConfUtil:
         获得定期执行的脚本保存结果的 collection 名称
         :return:
         '''
-        return 'crontab_result'
+        return cf.get('collections','crontab')
 
     @classmethod
     def getXMLYAudioCollectionName(cls):
@@ -49,15 +54,15 @@ class ConfUtil:
         获得存储xmly 所有audio 信息的collection
         :return:
         '''
-        return 'xmly_audio'
+        return cf.get('collections','xmly_audio')
 
     @classmethod
     def getKLAudioCollectionName(cls):
-        return 'kl_audio'
+        return cf.get('collections','kl_audio')
 
     @classmethod
     def getQTAudioCollectionName(cls):
-        return 'qt_audio'
+        return cf.get('collections','qt_audio')
 
     @classmethod
     def getSoapTargetUri(cls):
@@ -65,8 +70,16 @@ class ConfUtil:
         获得接收 从cnr 回调的地址
         :return:
         '''
-        return "http://myhost:8080/toCNR/{sourceWeb}/{uuid}"
+        return cf.get('cnr','soaptargeturi')
 
     @classmethod
     def getCrontabResultCollectionName(cls):
-        return 'crontab_result'
+        return cf.get('collections','crontab')
+
+    @classmethod
+    def getCnrUri(cls):
+        '''
+        获得将音频数据推送至cnr 的地址
+        :return:
+        '''
+        return cf.get('cnr','uri')
