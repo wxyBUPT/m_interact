@@ -182,6 +182,17 @@ class Sender:
                         xmlyAudio['uuid']
                     )
                 )
+                #设置将数据推送到cnr 的时间
+                self.xmlyAudio.update(
+                    {
+                        "_id":xmlyAudio['_id']
+                    },
+                    {
+                        "$set":{
+                            "sendToCNRTime":datetime.datetime.now()
+                        }
+                    }
+                )
 
         klAudios = self.getKLAudioNotInCNRWithFile()
         for klAudio in klAudios:
@@ -196,6 +207,17 @@ class Sender:
                         klAudio['uuid']
                     )
                 )
+                #设置推送到cnr 的时间
+                self.klAudio.update(
+                    {
+                        "_id":klAudio['_id']
+                    },
+                    {
+                        "$set":{
+                            "sendToCNRTime":datetime.datetime.now()
+                        }
+                    }
+                )
         qtAudios = self.getQTAudioNotInCNRWithFile()
         for qtAudio in qtAudios:
             qcount -= 1
@@ -208,6 +230,16 @@ class Sender:
                     u'send qtAudio uuid - {0}'.format(
                         qtAudio['uuid']
                     )
+                )
+                self.qtAudio.update(
+                    {
+                        "_id":qtAudio['_id']
+                    },
+                    {
+                        "$set":{
+                            "sendToCNRTime":datetime.datetime.now()
+                        }
+                    }
                 )
 
 #   def dict_to_xml(self,tag,d):
@@ -228,3 +260,7 @@ class Sender:
 #       return elem
 
 
+#一次向cnr 推送 setting 中的数目的 audio
+if __name__ == "__main__":
+    sender = Sender()
+    sender.getAudioPutToCNR(ConfUtil.getCnrSendCountOnce())
