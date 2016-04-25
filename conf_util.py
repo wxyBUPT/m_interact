@@ -1,6 +1,7 @@
 #coding=utf-8
 __author__ = 'xiyuanbupt'
 import ConfigParser
+import os.path
 
 cf = ConfigParser.ConfigParser()
 
@@ -91,3 +92,13 @@ class ConfUtil:
         :return:
         '''
         return cf.getint('cnr','sendCountOnce')
+
+    @classmethod
+    def getTemplatePath(cls):
+        path = cf.get('file','template_path')
+        return path if path.startswith('/') else os.path.abspath(path)
+
+    @classmethod
+    def getStaticPath(cls):
+        path = cf.get('file','static_path')
+        return path if path.startswith('/') else os.path.abspath(path)
