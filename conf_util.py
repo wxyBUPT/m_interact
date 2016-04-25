@@ -83,3 +83,11 @@ class ConfUtil:
         :return:
         '''
         return cf.get('cnr','uri')
+
+    @classmethod
+    def getCnrSendCountOnce(cls):
+        '''
+        获得一次推送到cnr 中audio 的数目
+        :return:
+        '''
+        return cf.getint('cnr','sendCountOnce')
