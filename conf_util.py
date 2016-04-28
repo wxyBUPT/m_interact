@@ -102,3 +102,11 @@ class ConfUtil:
     def getStaticPath(cls):
         path = cf.get('file','static_path')
         return path if path.startswith('/') else os.path.abspath(path)
+
+    @classmethod
+    def getSleepSecAgterPush(cls):
+        return cf.getint('cnr','speepSecAfterSend')
+
+    @classmethod
+    def getSendThreadCount(cls):
+        return cf.getint('cnr','sendThreadCount')

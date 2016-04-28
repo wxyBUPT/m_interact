@@ -10,6 +10,7 @@ from xml.etree.ElementTree import Element
 from jinja2 import Environment,PackageLoader
 from pymongo import MongoClient
 import requests
+import time,threading
 
 from conf_util import ConfUtil
 env = Environment(loader=PackageLoader('m_interact','templates'))
@@ -18,7 +19,6 @@ env = Environment(loader=PackageLoader('m_interact','templates'))
 '''
 client = MongoClient(ConfUtil.getMongoIP(),ConfUtil.getMongoPort())
 db = client[ConfUtil.getDBName()]
-
 
 class Sender:
     klAudio = db[ConfUtil.getKLAudioCollectionName()]
@@ -157,12 +157,13 @@ class Sender:
                             headers = headers)
         return res
 
-    def getAudioPutToCNR(self,count = 10):
+    def getAudioPutToCNR(self,count = 10000,funAfterPush = lambda:time.sleep(0)):
         '''
         冷启动，或者平时使用，向cnr 发送当前数据库中有媒体文件但是未被发送到cnr 的数据
         执行获得所有未被推送到cnr ，并且文件已经被下载到本地种的audio 并将其推送至cnr
         并更改标志位
         :param count 为本次期望发送到cnr 最大的音频数量,默认为10，生产环境中需要更改
+        :param funAfterPush 每次执行推送任务之后的函数
         '''
         logger = logging.getLogger('sender')
         #每个网站推送相同的数据量
@@ -183,6 +184,7 @@ class Sender:
                     )
                 )
                 #设置将数据推送到cnr 的时间
+                funAfterPush()
                 self.xmlyAudio.update(
                     {
                         "_id":xmlyAudio['_id']
@@ -208,6 +210,7 @@ class Sender:
                     )
                 )
                 #设置推送到cnr 的时间
+                funAfterPush()
                 self.klAudio.update(
                     {
                         "_id":klAudio['_id']
@@ -231,6 +234,7 @@ class Sender:
                         qtAudio['uuid']
                     )
                 )
+                funAfterPush()
                 self.qtAudio.update(
                     {
                         "_id":qtAudio['_id']
@@ -261,6 +265,21 @@ class Sender:
 
 
 #一次向cnr 推送 setting 中的数目的 audio
+class pushThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__()
+
+    def run(self):
+        sender = Sender()
+        sleepSec = ConfUtil.getSleepSecAgterPush()
+        sender.getAudioPutToCNR(ConfUtil.getCnrSendCountOnce(),
+                                lambda:time.sleep(sleepSec))
 if __name__ == "__main__":
-    sender = Sender()
-    sender.getAudioPutToCNR(ConfUtil.getCnrSendCountOnce())
+    threadCount = ConfUtil.getSendThreadCount()
+    threads = []
+    for i in range(threadCount):
+        thread = pushThread()
+        thread.start()
+        threads.append(thread)
+    for t in threads:
+        t.join()
