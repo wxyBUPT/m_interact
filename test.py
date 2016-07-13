@@ -54,6 +54,7 @@ class TestSender(unittest.TestCase):
         import json
         resp = json.loads(resp,encoding='utf-8')
         self.assertIsNotNone(resp['data'])
+        print resp['data']
 
     def testGetAudioPutToCNR(self):
         self.sender.getAudioPutToCNR(3)
