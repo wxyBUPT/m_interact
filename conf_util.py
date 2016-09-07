@@ -105,7 +105,7 @@ class ConfUtil:
 
     @classmethod
     def getSleepSecAgterPush(cls):
-        return cf.getint('cnr','speepSecAfterSend')
+        return cf.getint('cnr','sleepSecAfterSend')
 
     @classmethod
     def getSendThreadCount(cls):

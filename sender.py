@@ -2,11 +2,9 @@
 from __future__ import absolute_import
 __author__ = 'xiyuanbupt'
 import datetime
-import requests
 import logging
 import logging.config
 logging.config.fileConfig('./logger.ini')
-from xml.etree.ElementTree import Element
 from jinja2 import Environment,PackageLoader
 from pymongo import MongoClient
 import requests
@@ -267,7 +265,7 @@ class Sender:
 #一次向cnr 推送 setting 中的数目的 audio
 class pushThread(threading.Thread):
     def __init__(self):
-        threading.Thread.__init__()
+        threading.Thread.__init__(self)
 
     def run(self):
         sender = Sender()
