@@ -29,6 +29,7 @@ class FeedBack(tornado.web.RequestHandler):
             tornado.escape.json_encode(data)
         )
 
+
 class HandleXMLYRe(tornado.web.RequestHandler):
     '''
     负责处理喜马拉雅的回调函数
@@ -42,6 +43,7 @@ class HandleXMLYRe(tornado.web.RequestHandler):
                 "uuid":uuid
             }
         )
+
         if audio == None:
             self.set_status(404,u'audioNotFount')
             self.finish(u"<html><body> Not Found</body></html>")

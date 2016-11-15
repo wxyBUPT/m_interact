@@ -110,3 +110,40 @@ class ConfUtil:
     @classmethod
     def getSendThreadCount(cls):
         return cf.getint('cnr','sendThreadCount')
+
+    @classmethod
+    def getXmlyAudioDir(cls):
+        return cf.get('download', 'xmly_audio')
+
+    @classmethod
+    def getXmlyImgDir(cls):
+        return cf.get('download', 'xmly_img')
+
+    @classmethod
+    def getQtAudioDir(cls):
+        return cf.get('download', 'qt_audio')
+
+    @classmethod
+    def getQtImgDir(cls):
+        return cf.get('download','qt_img')
+
+    @classmethod
+    def getKlAudioDir(cls):
+        return cf.get('download','kl_audio')
+
+    @classmethod
+    def getKlImgDir(cls):
+        return cf.get('download', 'kl_img')
+
+    @classmethod
+    def getRedisHost(cls):
+        return cf.get('redis', 'host')
+
+    @classmethod
+    def getRedisPort(cls):
+        return cf.get('redis', 'port')
+
+    @classmethod
+    def getRedisDb(cls):
+        return cf.get('redis', 'db')
+

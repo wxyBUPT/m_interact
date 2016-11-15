@@ -15,10 +15,13 @@ except ImportError:
 
 from tornado import gen
 from tornado.httpclient import AsyncHTTPClient
+import redis
 
 from utils.misc import md5sum
 
 logger = logging.getLogger(__name__)
+
+from resourceses.resourceses import redis_pool
 
 class FileException(Exception):
     """GEneral media error exception"""
@@ -30,7 +33,6 @@ class FSFilesStore(object):
             basedir = basedir.split('://',1)[1]
         self.basedir = basedir
         self._mkdir(self.basedir)
-        self.created_directories = defaultdict(set())
 
     def persist_file(self, path, buf):
         absolute_path = self._get_filesystem_path(path)
@@ -59,25 +61,31 @@ class FSFilesStore(object):
 
 class FilesDownloader(object):
 
+    redis = redis.Redis(connection_pool=redis_pool)
+
     def __init__(self,store_uri):
         self.store = self._get_store(store_uri)
+        self.base = store_uri
 
     def _get_store(self, store_uri):
         return FSFilesStore(store_uri)
 
     # 从url地址下载文件，并存储
     @gen.coroutine
-    def download_file(self, url, basedir=None):
-        print u'在这里下载文件'
+    def download_file(self, url):
+        # 避免重复下载,如果缓存中有则直接返回
+        cache = self.redis.hgetall(url)
+        if cache:
+            raise gen.Return(cache)
         client = AsyncHTTPClient()
         response = yield client.fetch(url)
 
-        if response.status != 200:
+        if response.code!= 200:
             logger.warning(
                 'File (code: %(status)s): Error downloading file form '
                 '%(url)s',
                 {
-                    'status':response.status,
+                    'status':response.code,
                     'url':url
                 }
             )
@@ -91,11 +99,13 @@ class FilesDownloader(object):
             raise FileException('empty-content')
         logger.debug(
             'File (%(status)s): Downloaded file from %(url)s' ,
-            {"status":response.status,'url':url}
+            {"status":response.code,'url':url}
         )
         path = self.file_path(url)
         checksum = self.file_downloaded(response, url)
-        raise gen.Return({'url':url,'path':path,'checksum':checksum})
+        res = {'url':url,'path':self.base + '/' + path,'checksum':checksum}
+        self.redis.hmset(url,res)
+        raise gen.Return(res)
 
     # 将下载
     def file_downloaded(self,response,url):
@@ -105,15 +115,7 @@ class FilesDownloader(object):
         checksum = md5sum(buf)
         return checksum
 
-        pass
-
     def file_path(self, url):
         media_guid = hashlib.sha1(url).hexdigest()
         media_ext = os.path.splitext(url)[1]
-        return 'full/%s/%s' % (media_guid, media_ext)
-
-
-
-
-def foo(url):
-    print url
+        return 'full/%s%s' % (media_guid, media_ext)

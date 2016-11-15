@@ -14,11 +14,12 @@ from tornado.httpclient import AsyncHTTPClient,HTTPRequest
 from tornado.web import MissingArgumentError
 
 from bson.objectid import ObjectId
-from scrapy.pipelines.files import FilesPipeline
+import redis
 
 from conf_util import ConfUtil
-from util.xmlGenerator import XMLGenerator
-
+from utils.xmlGenerator import XMLGenerator
+from utils.fileDownloader import FilesDownloader
+from resourceses.resourceses import redis_pool
 
 
 class UnSupportWebError(Exception):
@@ -33,9 +34,26 @@ xmlGenerator = XMLGenerator()
 
 class XXXSender(tornado.web.RequestHandler):
 
+    xmlyImgDownloader = FilesDownloader(ConfUtil.getXmlyImgDir())
+    xmlyAudioDownloader = FilesDownloader(ConfUtil.getXmlyAudioDir())
+    qtImgDownloader = FilesDownloader(ConfUtil.getQtImgDir())
+    qtAudioDownloader = FilesDownloader(ConfUtil.getQtAudioDir())
+    klImgDownloader = FilesDownloader(ConfUtil.getKlImgDir())
+    klAudioDownloader = FilesDownloader(ConfUtil.getKlAudioDir())
+
+    redis = redis.Redis(connection_pool=redis_pool)
+
     def initialize(self,collection,web_str):
         self.collection = collection
         self.web_str = web_str
+
+    @gen.coroutine
+    def get(self, *args, **kwargs):
+        user = {"Name":"Pradeep", "Company":"SCTL", "Address":"Mumbai", "Location":"RCP"}
+        self.redis.hmset("foiiio",user)
+        cache = self.redis.hgetall("foiiio")
+        print cache
+        self.write(cache)
 
     # 推送数据到cnr的索贝接口
     @gen.coroutine
@@ -56,10 +74,16 @@ class XXXSender(tornado.web.RequestHandler):
                 "sendToCNRTime":None
             }) for _id in _ids]
         # 如果对应的audio与媒体文件没有被下载，那么下载对应的audio与媒体文件
+        audiosInfo = None
+        imgsInfo = None
         if self.web_str == 'kl':
             pass
         elif self.web_str == 'xmly':
-            pass
+            audios_url = [audio.get("play_path") for audio in audios]
+            imgs_url = [audio.get("cover_url_142") for audio in audios]
+            audiosInfo = yield [self.xmlyAudioDownloader.download_file(url) for url in audios_url]
+            imgsInfo = yield [self.xmlyImgDownloader.download_file(url) for url in imgs_url]
+            #
         elif self.web_str == 'qt':
             pass
         else:
@@ -80,7 +104,9 @@ class XXXSender(tornado.web.RequestHandler):
                     "resps":[{'code':resp.code,'reason':resp.reason} for resp in resps],
                     "request_push_count":len(_ids),
                     "real_push_count":len(xmls),
-                    "force_push":force_push
+                    "force_push":force_push,
+                    'audiosInfo':audiosInfo,
+                    "imgsInfo":imgsInfo
                     })
 
     @gen.coroutine

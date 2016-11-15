@@ -262,7 +262,7 @@ class Sender:
 #       return elem
 
 
-#一次向cnr 推送 setting 中的数目的 audio
+# 一次向cnr 推送 setting 中的数目的 audio
 class pushThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)

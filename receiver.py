@@ -1,18 +1,43 @@
 #coding=utf-8
 __author__ = 'xiyuanbupt'
-import os.path
 
 import tornado.web
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 from motor.motor_tornado import MotorClient
+from tornado.web import URLSpec as url
 
 from tornado.options import define,options
 define("port",default=8000,help=u'接收请求的端口，默认为8000',type=int)
 
-from m_interact.urls import urlpatterns
+from m_interact.feedBack import FeedBack,HandleQTRe,HandleKLRe,HandleXMLYRe,ViewSummary
+from m_interact.sender import XXXSender
 from conf_util import ConfUtil
+
+#在urlpatterns 中添加新的路由
+urlpatterns = [
+    (r'/infoCrawler',FeedBack),
+    (r'/toCNR/xmly/(\w+)',HandleXMLYRe),
+    (r'/toCNR/kl/(\w+)',HandleKLRe),
+    (r'/toCNR/qt/(\w+)',HandleQTRe),
+    #对内的统计页面，资源整体情况描述
+    (r'/toStatistic/summary/',ViewSummary),
+    # xmly 数据推送
+    url(r'/api/sender/vod/xmly',XXXSender,dict(collection = ConfUtil.getXMLYAudioCollectionName(),
+                                               web_str='xmly'
+                                               )),
+    url(r'/api/sender/vod/qt',XXXSender,dict(collection = ConfUtil.getQTAudioCollectionName(),
+                                             web_str = 'qt'
+                                             )),
+    url(r'/api/sender/vod/qt',XXXSender,dict(
+        collection = ConfUtil.getKLAudioCollectionName(),
+        web_str = 'kl'
+    ))
+
+
+]
+
 
 class Application(tornado.web.Application):
     def __init__(self):
