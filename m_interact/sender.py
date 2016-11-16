@@ -87,6 +87,9 @@ class XXXSender(tornado.web.RequestHandler):
             imgsInfo = yield [self.xmlyImgDownloader.download_file(url) for url in imgs_url]
 
         elif self.web_str == 'qt':
+            audios_url = [audio.get("playUrl") for audio in audios]
+            audiosInfo = yield [self.qtAudioDownloader.download_file(url) for url in audios_url]
+            imgsInfo = []
             pass
         else:
             raise UnSupportWebError(self.web_str)

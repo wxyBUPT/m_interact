@@ -147,3 +147,70 @@ class ConfUtil:
     def getRedisDb(cls):
         return cf.get('redis', 'db')
 
+    @classmethod
+    def getTranscodServerHost(cls):
+        return cf.get('transcoding', 'host')
+
+    @classmethod
+    def getTranscodServerUserNmae(cls):
+        return cf.get('transcoding', 'user')
+
+    @classmethod
+    def getTranscodeServerUserPass(cls):
+        return cf.get('transcoding', 'password')
+
+    @classmethod
+    def getTranscodeServerM4aDir(cls):
+        return cf.get('transcoding', 'm4a_dir')
+
+    @classmethod
+    def getTranscodeServerJpgDir(cls):
+        return cf.get('transcoding', 'jpg_dir')
+
+    @classmethod
+    def getSupervisorUri(cls):
+        return cf.get('supervisor','uri')
+
+    @classmethod
+    def xmlyTopnProcessName(cls):
+        return cf.get('supervisor','xmly_topn')
+
+    @classmethod
+    def klTopnProcessName(cls):
+        return cf.get('supervisor','kl_topn')
+
+    @classmethod
+    def klFullProcessName(cls):
+        return cf.get('supervisor','kl_full')
+
+    @classmethod
+    def xmlyFullProcessName(cls):
+        return cf.get('supervisor','xmly_full')
+
+    @classmethod
+    def qtTopnProcessName(cls):
+        return cf.get('supervisor', 'qt_topn')
+
+    @classmethod
+    def qtFullProcessName(cls):
+        return cf.get('supervisor', 'qt_full')
+
+    @classmethod
+    def qtIncreProcessName(cls):
+        return cf.get('supervisor', 'qt_increment')
+
+    @classmethod
+    def xmlyIncreProcessName(cls):
+        return  cf.get('supervisor', 'xmly_increment')
+
+    @classmethod
+    def klIncreProcessName(cls):
+        return cf.get('supervisor', 'kl_increment')
+
+    @classmethod
+    def xmly_topn_n_key(cls):
+        return cf.get('xmly','topn_key')
+
+    @classmethod
+    def xmly_topn_table_key(cls):
+        return cf.get('xmly', 'topn_table')

@@ -13,6 +13,7 @@ define("port",default=8000,help=u'接收请求的端口，默认为8000',type=in
 
 from m_interact.feedBack import FeedBack,HandleQTRe,HandleKLRe,HandleXMLYRe,ViewSummary
 from m_interact.sender import XXXSender
+from m_interact.crawlerManager import XXXManager,QtTopnManager,XMLYTopnManager
 from conf_util import ConfUtil
 
 #在urlpatterns 中添加新的路由
@@ -30,11 +31,42 @@ urlpatterns = [
     url(r'/api/sender/vod/qt',XXXSender,dict(collection = ConfUtil.getQTAudioCollectionName(),
                                              web_str = 'qt'
                                              )),
-    url(r'/api/sender/vod/qt',XXXSender,dict(
+    url(r'/api/sender/vod/kl',XXXSender,dict(
         collection = ConfUtil.getKLAudioCollectionName(),
         web_str = 'kl'
-    ))
+    )),
 
+    url(r'/api/xmly/full', XXXManager, dict(
+        process_name = ConfUtil.xmlyFullProcessName()
+    )),
+
+    url(r'/api/qt/full', XXXManager, dict(
+        process_name = ConfUtil.qtFullProcessName()
+    )),
+
+    url(r'/api/xmly/increment', XXXManager, dict(
+        process_name = ConfUtil.xmlyIncreProcessName()
+    )),
+
+    url(r'/api/kl/increment', XXXManager, dict(
+        process_name = ConfUtil.klIncreProcessName()
+    )),
+
+    url(r'/api/qt/increment', XXXManager, dict(
+        process_name = ConfUtil.qtIncreProcessName()
+    )),
+
+    url(r'/api/kl/full', XXXManager, dict(
+        process_name = ConfUtil.klFullProcessName()
+    )),
+
+    url(r'/api/qt/topn', QtTopnManager, dict(
+        process_name = ConfUtil.qtTopnProcessName()
+    )),
+
+    url(r'/api/xmly/topn', XMLYTopnManager, dict(
+        process_name = ConfUtil.xmlyTopnProcessName()
+    ))
 
 ]
 
