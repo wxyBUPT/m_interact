@@ -70,4 +70,6 @@ class TestSender(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+    # sudo docker run --name mongo_instance_001 -d my/repo --noprealloc --smallfiles
+
 

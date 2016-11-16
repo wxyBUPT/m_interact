@@ -77,13 +77,15 @@ class XXXSender(tornado.web.RequestHandler):
         audiosInfo = None
         imgsInfo = None
         if self.web_str == 'kl':
-            pass
+            # 因为kl网站挂掉了所以暂时不提供kl网站下载
+            raise UnSupportWebError(self.web_str)
         elif self.web_str == 'xmly':
+            # 因为取消掉媒体文件下载进程，所以所有媒体文件下载都在这里
             audios_url = [audio.get("play_path") for audio in audios]
             imgs_url = [audio.get("cover_url_142") for audio in audios]
             audiosInfo = yield [self.xmlyAudioDownloader.download_file(url) for url in audios_url]
             imgsInfo = yield [self.xmlyImgDownloader.download_file(url) for url in imgs_url]
-            #
+
         elif self.web_str == 'qt':
             pass
         else:
