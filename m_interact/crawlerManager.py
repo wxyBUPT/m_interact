@@ -116,7 +116,10 @@ class XXXManager(tornado.web.RequestHandler):
         '''
         status = yield self.get_process_info(self.process_name)
         if status['state']== 20:
-            body = json.loads(self.request.body.decode('utf-8'))
+            try:
+                body = json.loads(self.request.body.decode('utf-8'))
+            except:
+                body = {}
             if body.get('sigint', True):
                 yield self.stop_process(self.process_name)
                 self.write({"status":"success"})
