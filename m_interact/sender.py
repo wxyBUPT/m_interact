@@ -134,6 +134,5 @@ class XXXSender(tornado.web.RequestHandler):
             body=xml.encode('utf-8'),
             method="POST"
         )
-        print xml.encode('utf-8')
         resp = yield client.fetch(request)
         raise gen.Return(resp)
