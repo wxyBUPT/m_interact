@@ -17,7 +17,7 @@ except ImportError:
     from io import BytesIO
 
 from tornado import gen
-from tornado.httpclient import AsyncHTTPClient
+from tornado.httpclient import AsyncHTTPClient,HTTPRequest
 import redis
 
 from utils.misc import md5sum
@@ -89,7 +89,8 @@ class FilesDownloader(object):
             self.redis.expire(url,timedelta(1))
             raise gen.Return(cache)
         client = AsyncHTTPClient()
-        response = yield client.fetch(url)
+        request = HTTPRequest(url,request_timeout=240)
+        response = yield client.fetch(request)
 
         if response.code!= 200:
             logger.warning(
