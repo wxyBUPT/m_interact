@@ -37,27 +37,22 @@ def test_sender():
         "force_push":True
     }
     res = requests.post(url,json=body)
-    print(u'测试的结果是: ')
     pprint.pprint(json.loads(res.text))
     assert res.ok == True
 
 def test_stop_runner():
-    print u'测试爬虫启停'
     url = urlparse.urljoin(url_base,'api/xmly/full')
-    print u'获得xmly全量状态'
 
     res = requests.get(url)
     pprint.pprint(res.text)
 
     assert json.loads(res.text).get('statename') == 'STOPPED'
 
-    print u'启动'
 
 
 class TestApi(unittest.TestCase):
 
     def testSender(self):
-        print u'测试推送xmly音频文件，推送两个文件并且未强制推送'
         url = urlparse.urljoin(url_base,'api/sender/vod/xmly')
         body = {
             "post_address":"http://httpbin.org/post",
@@ -74,13 +69,11 @@ class TestApi(unittest.TestCase):
             "force_push":True
         }
         res = requests.post(url,json=body)
-        print(u'测试的结果是: ')
         pprint.pprint(json.loads(res.text))
         self.assertTrue(res.ok)
 
     def testXMLYFullStopRunner(self):
 
-        print u'测试xmly全量的启停'
         url = urlparse.urljoin(url_base,'api/xmly/full')
         res = requests.get(url)
         self.assertEqual(
@@ -91,15 +84,12 @@ class TestApi(unittest.TestCase):
 
     def testXMLYTopnStopRunner(self):
 
-        print u'测试topn启动，首先停止爬虫'
         url = urlparse.urljoin(url_base,'api/xmly/topn')
         before = datetime.datetime.now()
         print requests.delete(url).text
         after = datetime.datetime.now()
-        print u'停止爬虫一共花费:'
         print  (after-before).seconds
 
-        print u'获得topn当前状态,确定是停止的'
         res = requests.get(url)
         print res.text
         self.assertEqual(
@@ -107,7 +97,6 @@ class TestApi(unittest.TestCase):
             100
         )
 
-        print u'启动xmly topn'
         res = requests.post(
             url,
             json={
@@ -123,11 +112,9 @@ class TestApi(unittest.TestCase):
             'RUNNING'
         )
 
-        print u'最后停止爬虫'
         before = datetime.datetime.now()
         print requests.delete(url).text
         after = datetime.datetime.now()
-        print u'最后停止爬虫一共花费:'
         print  (after-before).seconds
 
 
