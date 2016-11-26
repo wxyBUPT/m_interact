@@ -1,6 +1,9 @@
 #coding=utf-8
 __author__ = 'xiyuanbupt'
 import unittest
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 #from tests.example import TestFoo
 #from tests.testFileDownloader import TestFileDownloader
 #from tests.testSender import TestSender
