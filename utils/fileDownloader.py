@@ -7,6 +7,9 @@ import os
 import os.path
 import logging
 import hashlib
+import datetime
+from datetime import timedelta
+
 
 try:
     from cStringIO import StringIO as BytesIO
@@ -76,6 +79,12 @@ class FilesDownloader(object):
         # 避免重复下载,如果缓存中有则直接返回
         cache = self.redis.hgetall(url)
         if cache:
+            # 重新设置缓存时间
+            logger.debug(
+                'File meta in redis, path is %(path)s',
+                {"path":cache.get('path',None)}
+            )
+            self.redis.expire(url,timedelta(1))
             raise gen.Return(cache)
         client = AsyncHTTPClient()
         response = yield client.fetch(url)
@@ -104,7 +113,12 @@ class FilesDownloader(object):
         path = self.file_path(url)
         checksum = self.file_downloaded(response, url)
         res = {'url':url,'path':self.base + '/' + path,'checksum':checksum}
+        logger.debug(
+            'Cache file meta in redis, path is %(path)s',
+            {"path":res.get('path',None)}
+        )
         self.redis.hmset(url,res)
+        self.redis.expire(url, timedelta(days=1))
         raise gen.Return(res)
 
     # 将下载
@@ -118,4 +132,11 @@ class FilesDownloader(object):
     def file_path(self, url):
         media_guid = hashlib.sha1(url).hexdigest()
         media_ext = os.path.splitext(url)[1]
-        return 'full/%s%s' % (media_guid, media_ext)
+        now = datetime.datetime.now()
+        return '%s/%d/%d/%d/%s%s' % (
+            media_ext[1:],
+            now.year,
+            now.month,
+            now.day,
+            media_guid,
+            media_ext)

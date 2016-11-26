@@ -89,8 +89,7 @@ class XXXSender(tornado.web.RequestHandler):
         elif self.web_str == 'qt':
             audios_url = [audio.get("playUrl") for audio in audios]
             audiosInfo = yield [self.qtAudioDownloader.download_file(url) for url in audios_url]
-            imgsInfo = []
-            pass
+            # 暂时不推送qt 的url
         else:
             raise UnSupportWebError(self.web_str)
 
