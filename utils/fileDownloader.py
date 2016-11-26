@@ -76,6 +76,8 @@ class FilesDownloader(object):
     # 从url地址下载文件，并存储
     @gen.coroutine
     def download_file(self, url):
+        if not url:
+            raise gen.Return(None)
         # 避免重复下载,如果缓存中有则直接返回
         cache = self.redis.hgetall(url)
         if cache:

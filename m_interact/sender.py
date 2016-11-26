@@ -52,7 +52,6 @@ class XXXSender(tornado.web.RequestHandler):
         user = {"Name":"Pradeep", "Company":"SCTL", "Address":"Mumbai", "Location":"RCP"}
         self.redis.hmset("foiiio",user)
         cache = self.redis.hgetall("foiiio")
-        print cache
         self.write(cache)
 
     # 推送数据到cnr的索贝接口
@@ -81,19 +80,23 @@ class XXXSender(tornado.web.RequestHandler):
             raise UnSupportWebError(self.web_str)
         elif self.web_str == 'xmly':
             # 因为取消掉媒体文件下载进程，所以所有媒体文件下载都在这里
-            audios_url = [audio.get("play_path") for audio in audios]
-            imgs_url = [audio.get("cover_url_142") for audio in audios]
+            audios_url = [audio.get("play_path",None) for audio in audios]
+            imgs_url = [audio.get("cover_url_142",None) for audio in audios]
             audiosInfo = yield [self.xmlyAudioDownloader.download_file(url) for url in audios_url]
             imgsInfo = yield [self.xmlyImgDownloader.download_file(url) for url in imgs_url]
 
         elif self.web_str == 'qt':
             audios_url = [audio.get("playUrl") for audio in audios]
             audiosInfo = yield [self.qtAudioDownloader.download_file(url) for url in audios_url]
-            # 暂时不推送qt 的url
+
+            # 因为爬虫没有获得img url，所以imgs 都为空
+            imgsInfo = [None for audio in audios]
         else:
             raise UnSupportWebError(self.web_str)
 
-        xmls = [xmlGenerator.getXMLContentFromAudio(self.web_str,audio) for audio in audios if audio ]
+        audiosInfo = zip(audios,audiosInfo,imgsInfo)
+
+        xmls = [xmlGenerator.getXMLContentFromAudio(self.web_str,audioInfo) for audioInfo in audiosInfo if audiosInfo[0]]
         resps = yield [self.sendXMLToCNR(xml) for xml in xmls]
         # 将推送到cnr 的时间设置到数据库中
         yield [coll.update(
@@ -109,8 +112,6 @@ class XXXSender(tornado.web.RequestHandler):
                     "request_push_count":len(_ids),
                     "real_push_count":len(xmls),
                     "force_push":force_push,
-                    'audiosInfo':audiosInfo,
-                    "imgsInfo":imgsInfo
                     })
 
     @gen.coroutine
@@ -124,8 +125,9 @@ class XXXSender(tornado.web.RequestHandler):
         headers = {'Content-Type':'application/xml'}
         request = HTTPRequest(
             ConfUtil.getCnrUri(),headers = headers,
-            body=xml.encode('utf=8'),
+            body=xml.encode('utf-8'),
             method="POST"
         )
+        print xml.encode('utf-8')
         resp = yield client.fetch(request)
         raise gen.Return(resp)

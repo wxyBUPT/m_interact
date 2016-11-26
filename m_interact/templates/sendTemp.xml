@@ -108,14 +108,14 @@
                         <GroupType>crawler_audio</GroupType>
                         <MediaType>m4a</MediaType>
                         {#<FileName>W:/recorder//recorder/2016/01/29/42372.mp4</FileName>#}
-                        <FileName>{{ FileName }}</FileName>
+                        <FileName>{{ AudioFileName }}</FileName>
                         <InPoint>0</InPoint>
                         <OutPoint>-1</OutPoint>
                     </MediaFile>
                     <MediaFile>
                         <GroupType>crawler_img</GroupType>
                         <MediaType>jpg</MediaType>
-                        <FileName>ftp://<爬虫服务器地址>/download</FileName>
+                        <FileName>{{ ImgFileName }}</FileName>
                         {#  <FileName>W:/recorder//recorder/2016/01/29/42372.jpg</FileName>#}
                         <InPoint>0</InPoint>
                         <OutPoint>-1</OutPoint>
