@@ -12,7 +12,7 @@ from tornado.options import define,options
 define("port",default=8000,help=u'接收请求的端口，默认为8000',type=int)
 
 from m_interact.feedBack import FeedBack,HandleQTRe,HandleKLRe,HandleXMLYRe,ViewSummary
-from m_interact.sender import XXXSender
+from m_interact.sender import XXXSender,AllSender
 from m_interact.crawlerManager import XXXManager,QtTopnManager,XMLYTopnManager
 from conf_util import ConfUtil
 
@@ -66,7 +66,9 @@ urlpatterns = [
 
     url(r'/api/xmly/topn', XMLYTopnManager, dict(
         process_name = ConfUtil.xmlyTopnProcessName()
-    ))
+    )),
+
+    url(r'/api/sender/vod/all',AllSender)
 
 ]
 

@@ -32,6 +32,12 @@ class UnSupportWebError(Exception):
 
 xmlGenerator = XMLGenerator()
 
+class AllSender(tornado.web.RequestHandler):
+
+    @gen.coroutine
+    def post(self, *args, **kwargs):
+        self.write("Push all media is impossible")
+
 class XXXSender(tornado.web.RequestHandler):
 
     xmlyImgDownloader = FilesDownloader(ConfUtil.getXmlyImgDir())
