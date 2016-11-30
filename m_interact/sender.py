@@ -128,7 +128,7 @@ class XXXSender(tornado.web.RequestHandler):
         :return:
         '''
         client = AsyncHTTPClient()
-        headers = {'Content-Type':'application/xml'}
+        headers = {'Content-Type':'text/xml'}
         request = HTTPRequest(
             ConfUtil.getCnrUri(),headers = headers,
             body=xml.encode('utf-8'),
