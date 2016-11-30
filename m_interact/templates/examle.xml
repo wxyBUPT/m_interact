@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+
+<MPCWebCmd>
+    <CommandType>AddTask</CommandType>
+    <AddTask>
+        <MPC>
+            <Header>
+                <Version>1.0</Version>
+                <RequestID>5fb570baa7da11e6b21dacbc327e3c3d</RequestID>
+
+
+                <RequestTime>2016-11-30 09:41:51</RequestTime>
+                <RequestMQ />
+            </Header>
+
+            <Content>
+                <MPCType>AddTask</MPCType>
+                <AddTask>
+                    <BaseInfo>
+                        <TaskGUID>5fb570baa7da11e6b21dacbc327e3c3d</TaskGUID>
+
+                        <TaskName>会计证</TaskName>
+                        <ColumnName />
+                        <TaskLength>n/a</TaskLength>
+                        <TaskPriority>0</TaskPriority>
+                        <DispatchType>auto</DispatchType>
+                        <Controllable>1</Controllable>
+
+                        <PutinTime>2016-11-30 09:41:51</PutinTime>
+                    </BaseInfo>
+
+
+                    <TaskInfo>
+                        <Scope>SoapTargetInfo</Scope>
+                        <Schema />
+                        <Data>
+                            <SoapTargetInfo>
+
+
+                                <SoapTargetUri>http://myhost:8080/toCNR/qt/5fb570baa7da11e6b21dacbc327e3c3d </SoapTargetUri>
+                            </SoapTargetInfo>
+                            <IsSplit>0</IsSplit>
+                            <transcodeSource>UPLOAD</transcodeSource>
+                        </Data>
+                    </TaskInfo>
+
+
+                    <TaskInfo>
+                        <Scope>DocumentInfo</Scope>
+                        <Schema />
+                        <Data>
+                            <DocumentInfo>
+
+                                <PGMNAME>会计证</PGMNAME>
+
+                                <CATALOGNAME>蜻蜓fm\点播\教育\会计证</CATALOGNAME>
+                                <EDITCATALOG>
+                                    <SYSTEM>BSRecorderActor</SYSTEM>
+
+                                    <PGMGUID>5fb570baa7da11e6b21dacbc327e3c3d</PGMGUID>
+                                    <AttributeItem>
+                                        <ItemCode>Title</ItemCode>
+                                        <ItemName>节目名称</ItemName>
+
+                                        <Value>会计证</Value>
+                                    </AttributeItem>
+                                    <AttributeItem>
+                                        <ItemCode>CreatorName</ItemCode>
+                                        <ItemName>创建人姓名</ItemName>
+
+                                        <Value>蜻蜓fm，作者未知</Value>
+                                    </AttributeItem>
+                                    <AttributeItem>
+                                        <ItemCode>PgmType</ItemCode>
+                                        <ItemName>节目类型</ItemName>
+                                        <Value>radio</Value>
+                                    </AttributeItem>
+                                    <AttributeItem>
+                                        <ItemCode>PgmNote</ItemCode>
+                                        <ItemName>节目描述</ItemName>
+
+                                        <Value>最新会计准则解读与应用02</Value>
+                                    </AttributeItem>
+                                    <AttributeItem>
+                                        <ItemCode>firstplaytime</ItemCode>
+                                        <ItemName>首播时间</ItemName>
+
+                                        <Value>None</Value>
+                                    </AttributeItem>
+                                    <AttributeItem>
+                                        <ItemCode>broadstarttime</ItemCode>
+                                        <ItemName>开始时间</ItemName>
+
+                                        <Value>None</Value>
+                                    </AttributeItem>
+                                    <AttributeItem>
+                                        <ItemCode>broadendtime</ItemCode>
+                                        <ItemName>结束时间</ItemName>
+
+                                        <Value>None</Value>
+                                    </AttributeItem>
+                                </EDITCATALOG>
+                            </DocumentInfo>
+                        </Data>
+                    </TaskInfo>
+
+                    <MediaFile>
+                        <GroupType>crawler_audio</GroupType>
+                        <MediaType>m4a</MediaType>
+
+                        <FileName>/Users/xiyuanbupt/sxs/m_interact/files/m4a/2016/11/30/0b67ce1785d1daade68f695f3189d9fe85c88241.m4a</FileName>
+                        <InPoint>0</InPoint>
+                        <OutPoint>-1</OutPoint>
+                    </MediaFile>
+                    <MediaFile>
+                        <GroupType>crawler_img</GroupType>
+                        <MediaType>jpg</MediaType>
+                        <FileName>None</FileName>
+
+                        <InPoint>0</InPoint>
+                        <OutPoint>-1</OutPoint>
+                    </MediaFile>
+                    <PolicyID>5025</PolicyID>
+                </AddTask>
+            </Content>
+
+        </MPC>
+    </AddTask>
+</MPCWebCmd>

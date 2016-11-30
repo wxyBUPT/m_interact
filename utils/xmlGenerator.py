@@ -9,6 +9,8 @@ from conf_util import ConfUtil
 
 class XMLGenerator:
 
+    transcoding_mount = 'H:'
+
     template = Environment(loader=PackageLoader('m_interact','templates')).get_template(
         'sendTemp.xml'
     )
@@ -84,8 +86,8 @@ class XMLGenerator:
             CATALOGNAME = CATALOGNAME,
             CreatorName = CreatorName,
             PgmNote = PgmNote,
-            AudioFileName = AudioFileName,
-            ImgFileName = ImgFileName,
+            AudioFileName = self.transcoding_mount + AudioFileName,
+            ImgFileName = self.transcoding_mount + ImgFileName,
             TaskName = TaskName,
             firstplaytime = None,
             broadstarttime = None,
