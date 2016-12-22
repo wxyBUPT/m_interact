@@ -12,9 +12,14 @@ from tornado import gen
 from tornado.httpclient import AsyncHTTPClient,HTTPRequest
 
 from tornado.web import MissingArgumentError
+from tornado.concurrent import run_on_executor
+
+from concurrent.futures import ThreadPoolExecutor
 
 from bson.objectid import ObjectId
 import redis
+
+from SOAPpy import SOAPProxy
 
 from conf_util import ConfUtil
 from utils.xmlGenerator import XMLGenerator
@@ -38,7 +43,10 @@ class AllSender(tornado.web.RequestHandler):
     def post(self, *args, **kwargs):
         self.write("Push all media is impossible")
 
+MAX_WORKERS=4
 class XXXSender(tornado.web.RequestHandler):
+
+    executor = ThreadPoolExecutor(max_workers=MAX_WORKERS)
 
     xmlyImgDownloader = FilesDownloader(ConfUtil.getXmlyImgDir())
     xmlyAudioDownloader = FilesDownloader(ConfUtil.getXmlyAudioDir())
@@ -47,9 +55,11 @@ class XXXSender(tornado.web.RequestHandler):
     klImgDownloader = FilesDownloader(ConfUtil.getKlImgDir())
     klAudioDownloader = FilesDownloader(ConfUtil.getKlAudioDir())
 
+    proxy =SOAPProxy(ConfUtil.getCnrUri())
+
     redis = redis.Redis(connection_pool=redis_pool)
 
-    def initialize(self,collection,web_str):
+    def initialize(self, collection, web_str):
         self.collection = collection
         self.web_str = web_str
 
@@ -114,25 +124,20 @@ class XXXSender(tornado.web.RequestHandler):
             }
         ) for audio in audios]
         self.write({"audios":[audio.get('album_title') for audio in audios],
-                    "resps":[{'code':resp.code,'reason':resp.reason} for resp in resps],
+                    "resps":['success' if resp else 'fault' for resp in resps],
                     "request_push_count":len(_ids),
                     "real_push_count":len(xmls),
                     "force_push":force_push,
                     })
 
-    @gen.coroutine
-    def sendXMLToCNR(self,xml):
+    @run_on_executor
+    def sendXMLToCNR(self, xml):
         '''
         将xml 内容推送到cnr
         :param xml:
         :return:
         '''
-        client = AsyncHTTPClient()
-        headers = {'Content-Type':'application/soap+xml'}
-        request = HTTPRequest(
-            ConfUtil.getCnrUri(),headers = headers,
-            body=xml.encode('utf-8'),
-            method="POST"
+        resp = self.proxy.mpccommit(
+            strInput = xml
         )
-        resp = yield client.fetch(request)
-        raise gen.Return(resp)
+        return resp

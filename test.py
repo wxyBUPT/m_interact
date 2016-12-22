@@ -55,7 +55,7 @@ class TestApi(unittest.TestCase):
     def testSender(self):
         url = urlparse.urljoin(url_base,'api/sender/vod/xmly')
         body = {
-            "post_address":"http://httpbin.org/post",
+            "post_address":"http://localhost:8080/",
             "_ids":["571a2e0de1382377590c23e7","571a2e0ce1382377590c23e6"],
             "force_push":True
         }
@@ -64,7 +64,7 @@ class TestApi(unittest.TestCase):
 
         url = urlparse.urljoin(url_base,'api/sender/vod/qt')
         body = {
-            "post_address":"http://httpbin.org/post",
+            "post_address":"http://localhost:8080/",
             "_ids":["582568ef0e640d11bb38329c","582568ef0e640d11bb38329b","582568ef0e640d11bb38329a"],
             "force_push":True
         }
