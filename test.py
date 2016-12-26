@@ -12,6 +12,8 @@ import pprint
 import time
 import datetime
 
+from SOAPpy import SOAPProxy
+
 url_base = 'http://localhost:8000'
 
 
@@ -116,6 +118,21 @@ class TestApi(unittest.TestCase):
         print requests.delete(url).text
         after = datetime.datetime.now()
         print  (after-before).seconds
+
+def test_cnr_api():
+    namespace = "http://10.20.30.21:8088/"
+    url = "http://10.20.30.21:8088/"
+    proxy = SOAPProxy(url, namespace)
+    proxy.config.debug = 1
+    with open('./m_interact/templates/examle.xml') as f:
+        strInput = f.readall()
+        proxy.mpccommit(
+            strInput = strInput
+        )
+    proxy.mpccommit(
+        strInput = "foo"
+    )
+
 
 
 if __name__ == "__main__":

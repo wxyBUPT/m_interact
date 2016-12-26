@@ -55,7 +55,8 @@ class XXXSender(tornado.web.RequestHandler):
     klImgDownloader = FilesDownloader(ConfUtil.getKlImgDir())
     klAudioDownloader = FilesDownloader(ConfUtil.getKlAudioDir())
 
-    proxy =SOAPProxy(ConfUtil.getCnrUri())
+    namespace = ("m", "urn:mpc")
+    proxy =SOAPProxy(ConfUtil.getCnrUri(), namespace)
 
     redis = redis.Redis(connection_pool=redis_pool)
 
