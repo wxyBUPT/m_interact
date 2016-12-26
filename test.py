@@ -74,6 +74,7 @@ class TestApi(unittest.TestCase):
         pprint.pprint(json.loads(res.text))
         self.assertTrue(res.ok)
 
+'''
     def testXMLYFullStopRunner(self):
 
         url = urlparse.urljoin(url_base,'api/xmly/full')
@@ -118,17 +119,13 @@ class TestApi(unittest.TestCase):
         print requests.delete(url).text
         after = datetime.datetime.now()
         print  (after-before).seconds
+'''
 
 def test_cnr_api():
-    namespace = "http://10.20.30.21:8088/"
+    namespace = ("m", "urn:mpc")
     url = "http://10.20.30.21:8088/"
-    proxy = SOAPProxy(url, namespace)
+    proxy = SOAPProxy(url,namespace)
     proxy.config.debug = 1
-    with open('./m_interact/templates/examle.xml') as f:
-        strInput = f.readall()
-        proxy.mpccommit(
-            strInput = strInput
-        )
     proxy.mpccommit(
         strInput = "foo"
     )
@@ -136,6 +133,7 @@ def test_cnr_api():
 
 
 if __name__ == "__main__":
+    test_cnr_api()
     unittest.main()
     pass
     # unittest.main()
