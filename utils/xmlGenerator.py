@@ -94,7 +94,7 @@ class XMLGenerator:
             CreatorName = CreatorName,
             PgmNote = PgmNote,
             AudioFileName = self.transcoding_mount + AudioFileName,
-            ImgFileName = (self.transcoding_mount + ImgFileName) if ImgFileName else None,
+            ImgFileName = (self.transcoding_mount + ImgFileName) if ImgFileName else "H:\\jpg\\2013127111320.png",
             TaskName = TaskName,
             firstplaytime = None,
             broadstarttime = None,
