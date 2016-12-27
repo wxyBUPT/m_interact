@@ -3,13 +3,18 @@ __author__ = 'xiyuanbupt'
 # e-mail : xywbupt@gmail.com
 
 import datetime
+from os import path
+import os
 
 from jinja2 import Environment,PackageLoader
 from conf_util import ConfUtil
 
 class XMLGenerator:
 
+    # 转码服务器共享盘挂载的路径
     transcoding_mount = 'H:'
+    # 爬虫服务器共享盘挂载的路径
+    my_mount = '/var/crawler/cnr_shares'
 
     template = Environment(loader=PackageLoader('m_interact','templates')).get_template(
         'sendTemp.xml'
@@ -73,6 +78,8 @@ class XMLGenerator:
             ImgFileName = imgFile.get('path',None) if imgFile else None
         else:
             print u'未知sourceWeb'
+        AudioFileName = changePathStyle(AudioFileName)
+        ImgFileName = changePathStyle(ImgFileName)
         xmlContent = self.template.render(
             RequestID = RequestID,
             RequestTime = RequestTime,
@@ -87,7 +94,7 @@ class XMLGenerator:
             CreatorName = CreatorName,
             PgmNote = PgmNote,
             AudioFileName = self.transcoding_mount + AudioFileName,
-            ImgFileName = self.transcoding_mount + ImgFileName,
+            ImgFileName = (self.transcoding_mount + ImgFileName) if ImgFileName else None,
             TaskName = TaskName,
             firstplaytime = None,
             broadstarttime = None,
@@ -95,3 +102,17 @@ class XMLGenerator:
         )
 
         return xmlContent
+
+    # 将爬虫爬取的文件路径转换为转码服务器挂载的路径
+my_mount = '/var/crawler/cnr_shares'
+def changePathStyle( filePath):
+    if not filePath:
+        return filePath
+    if filePath.startwith(my_mount):
+        filePath = filePath[len(my_mount):]
+    paths = filePath.split('/')
+    filePath = '\\'.join(paths)
+    return filePath
+
+if __name__ == "__main__":
+    changePathStyle('/var/crawler/cnr_shares/m4a/2016/12/26/e19af8357.m4a')
