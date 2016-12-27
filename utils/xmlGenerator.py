@@ -80,6 +80,7 @@ class XMLGenerator:
             print u'未知sourceWeb'
         AudioFileName = changePathStyle(AudioFileName)
         ImgFileName = changePathStyle(ImgFileName)
+        CATALOGNAME = u'网络爬取数据\\' + CATALOGNAME
         xmlContent = self.template.render(
             RequestID = RequestID,
             RequestTime = RequestTime,
