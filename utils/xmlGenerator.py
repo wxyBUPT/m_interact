@@ -108,7 +108,7 @@ my_mount = '/var/crawler/cnr_shares'
 def changePathStyle( filePath):
     if not filePath:
         return filePath
-    if filePath.startwith(my_mount):
+    if filePath.startswith(my_mount):
         filePath = filePath[len(my_mount):]
     paths = filePath.split('/')
     filePath = '\\'.join(paths)
